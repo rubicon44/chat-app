@@ -1,0 +1,10 @@
+version: '3'
+services:
+  front:
+    build: .
+    volumes:
+      - ./:/chat-app
+    command: sh -c "yarn start"
+    ports:
+     - "3000:3000"
+    tty: true
