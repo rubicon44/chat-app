@@ -109,7 +109,7 @@ export default class SignUp extends Component {
             <Title>Chat-app</Title>
             {/* loginForm.js */}
             <RegistrationFormGroup>
-            <dt>ユーザー登録</dt>
+            <dt>新規会員登録</dt>
             <dd>
                 <RegistrationForm>
                     <RegistrationFormTable>
