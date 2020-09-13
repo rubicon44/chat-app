@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Link, } from 'react-router-dom';
 import styled from 'styled-components';
 import Header from '../components/containers/organisms/header';
 import NextChatButton from '../components/presentational/atoms/nextChatButton';
@@ -27,6 +28,7 @@ class Top extends Component {
         <Header />
         <TopBackground>
           <Title>Chap-app</Title>
+          {/* 下記で「ゲストログイン」ができるようにする。 */}
           <NextChatButton text="さっそく使ってみる" />
         </TopBackground>
       </div>
