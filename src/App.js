@@ -2,9 +2,13 @@ import React, { Component } from 'react';
 import {
   BrowserRouter as Router,
   Route,
-  Switch,
+  // Switch,
 } from 'react-router-dom';
 import './assets/styles/reset.css';
+
+// 認証用Context
+import { AuthProvider } from './auth/authProvider';
+import PrivateRoute from './auth/privateRoute';
 
 // 認証前・サインイン・サインアップ
 import Top from './static_pages/top';
@@ -17,19 +21,22 @@ import ChatIndivisual from './components/containers/pages/chatIndivisual';
 class App extends Component {
   render() {
     return (
-      <Router>
-        <div className="App">
-          <Switch>
-            {/* top・サインイン・サインアップ */}
-            <Route exact path="/top" component={Top} />
-            <Route exact path="/sign_in" component={SignIn} />
-            <Route exact path="/sign_up" component={SignUp} />
-            {/* チャット */}
-            <Route exact path="/chat" component={Chat} />
-            <Route exact path="/chatIndivisual" component={ChatIndivisual} />
-          </Switch>
-        </div>
-      </Router>
+      <AuthProvider>
+        <Router>
+          <div className="App">
+            {/* <Switch> */}
+              {/* top・サインイン・サインアップ */}
+              <PrivateRoute exact path="/" component={Top} />
+              <PrivateRoute exact path="/top" component={Top} />
+              <Route exact path="/sign_in" component={SignIn} />
+              <Route exact path="/sign_up" component={SignUp} />
+              {/* チャット */}
+              <PrivateRoute exact path="/chat" component={Chat} />
+              <PrivateRoute exact path="/chatIndivisual" component={ChatIndivisual} />
+            {/* </Switch> */}
+          </div>
+        </Router>
+      </AuthProvider>
     )
   }
 };

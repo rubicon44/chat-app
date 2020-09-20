@@ -1,9 +1,12 @@
 import React, { Component } from 'react';
-import { Link, } from 'react-router-dom';
+// import { Link, } from 'react-router-dom';
 import styled from 'styled-components';
+
 import Header from '../components/containers/organisms/header';
 import NextSignInButton from '../components/presentational/atoms/nextSignInButton';
 import NextSignUpButton from '../components/presentational/atoms/nextSignUpButton';
+import LogOutButton from '../components/presentational/atoms/logOutButton';
+
 import NextChatButton from '../components/presentational/atoms/nextChatButton';
 
 const TopBackground = styled.div`
@@ -41,6 +44,7 @@ class Top extends Component {
         <NextSignInUpButtonCover>
           <NextSignInButton text="ログイン" />
           <NextSignUpButton text="会員登録" />
+          <LogOutButton text="ログアウト" />
         </NextSignInUpButtonCover>
         <TopBackground>
           <Title>Chap-app</Title>
