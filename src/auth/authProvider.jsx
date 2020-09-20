@@ -8,7 +8,7 @@ export const AuthProvider = ({ children }) => {
   const [currentUser, setCurrentUser] = useState(null);
 
   // ユーザーをログインさせる関数
-  const signin = async(email, password, history) => {
+  const signin = async (email, password, history) => {
     try {
       // awaitをつけないと、先に「history.push」が実行されてしまいログイン画面（/）にページ遷移してしまう。
       await auth.signInWithEmailAndPassword(email, password);
@@ -19,7 +19,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   // 新しいユーザーを作成しログインさせる関数
-  const signup = async(email, password, history) => {
+  const signup = async (email, password, history) => {
     try {
       await auth.createUserWithEmailAndPassword(email, password);
       history.push("/");
@@ -28,7 +28,7 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  const signout = async() => {
+  const signout = async () => {
     await auth.signOut()
   }
 
