@@ -38,7 +38,7 @@ export const AuthProvider = ({ children }) => {
 
   return (
     // Contextを使用して認証に必要な情報をコンポーネントツリーに流し込む。
-    <AuthContext.Provider value={{ currentUser, signup, signin, signout }}>
+    <AuthContext.Provider value={{ currentUser, signin, signup, signout }}>
       {children}
     </AuthContext.Provider>
   );
