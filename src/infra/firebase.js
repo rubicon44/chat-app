@@ -33,6 +33,6 @@ firebase.initializeApp({
 
 const auth = firebase.auth()
 // const db = firebase.firestore()
-const firebaseDb = firebaseApp.database();
+const firebaseDb = firebase.database();
 
 export {auth, firebaseDb}
