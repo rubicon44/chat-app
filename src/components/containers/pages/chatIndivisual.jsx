@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import update from 'immutability-helper';
 import styled from 'styled-components';
 
+import { firebaseDb } from '../../../infra/firebase.js'
+
 import Header from '../organisms/header';
 import BottomChatBar from '../organisms/bottomChatBar';
 import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
