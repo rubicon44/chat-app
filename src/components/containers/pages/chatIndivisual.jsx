@@ -33,6 +33,9 @@ const Title = styled.h1`
   font-family: YuGothic;
 `
 
+// Firebase Realtime Databaseとの通信用
+const messagesRef = firebaseDb.ref('messages')
+
 class ChatIndivisual extends Component {
   constructor(props) {
     super(props);
@@ -52,7 +55,7 @@ class ChatIndivisual extends Component {
     window.scroll(0, elementBottom);
   }
 
-  // input無いのvalueに入力した値を反映させる
+  // input内のvalueに入力した値を反映させる
   handleMessageChange = (e) => {
     e.preventDefault();
     this.setState({ 
@@ -73,7 +76,27 @@ class ChatIndivisual extends Component {
         message: '',
     });
 
+    // Firebase Realtime Databaseへデータを書き込み
+    messagesRef.push({
+      "text" : this.state.text,
+    });
+
     document.getElementById('messageListCover').style.paddingBottom =  "0";
+  };
+
+  componentDidMount() {
+    messagesRef.on('child_added', (snapshot) => {
+      const m = snapshot.val()
+      let msgs = this.state.message
+
+      msgs.push({
+        'text' : m.text,
+      })
+
+      this.setState({
+        message : msgs
+      });
+    })
   };
 
   render() {
