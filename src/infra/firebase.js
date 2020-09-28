@@ -20,6 +20,7 @@
 
 import firebase from 'firebase';
 import 'firebase/auth';
+import 'firebase/database';
 
 firebase.initializeApp({
   // Authentication infomation
@@ -31,7 +32,7 @@ firebase.initializeApp({
   messagingSenderId: process.env.REACT_APP_FIREBASE_SENDER_ID
 })
 
-const auth = firebase.auth()
+const auth = firebase.auth();
 // const db = firebase.firestore()
 const firebaseDb = firebase.database();
 
