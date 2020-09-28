@@ -36,7 +36,7 @@ const Title = styled.h1`
 `
 
 // Firebase Realtime Databaseとの通信用
-const messagesRef = firebaseDb.ref('/');
+const messagesRef = firebaseDb.ref('/chat');
 
 class ChatIndivisual extends Component {
   constructor(props) {
@@ -47,12 +47,33 @@ class ChatIndivisual extends Component {
     };
   }
 
+  // Viewが一番最初に描画されるとき、Firebase Realtime Databaseに保持されているtext（チャット内容）をReactで表示させる
+  componentDidMount() {
+    // Firebase Realtime Databaseの内容が変更されたときの処理
+    messagesRef.on('child_added', (snapshot) => {
+      // 現在のFirebase Realtime Databaseの内容を変数mに代入
+      const m = snapshot.val()
+
+      // 現在のFirebase Realtime Databaseの内容で、stateを更新
+      this.setState({
+        text : m
+      });
+
+      // console.log(this.state.text);
+    })
+  };
+
   handleBackButtonClick = () => {
     this.props.history.goBack('/chat');
   };
 
   // 描画されてから処理を実行。
   componentDidUpdate() {
+    // handleMessageSend()でセットされたtext（state内に一時的に保持）を即座にFirebase Realtime Databaseにpushする。
+    messagesRef.set({
+      "text" : this.state.text,
+    })
+
     const elementBottom = document.getElementById('messageListCover').clientHeight;
     window.scroll(0, elementBottom);
   }
@@ -79,27 +100,12 @@ class ChatIndivisual extends Component {
     });
 
     // Firebase Realtime Databaseへデータを書き込み
-    messagesRef.push({
-      "chat" : this.state.text,
-    })
+    // messagesRef.set({
+    //   "text" : this.state.text,
+    // })
 
     document.getElementById('messageListCover').style.paddingBottom =  "0";
   };
-
-  // componentDidMount() {
-  //   messagesRef.on('child_added', (snapshot) => {
-  //     const m = snapshot.val()
-  //     let msgs = this.state.message
-
-  //     messagesRef.push({
-  //       'text' : m.text,
-  //     })
-
-  //     this.setState({
-  //       message : msgs
-  //     });
-  //   })
-  // };
 
   render() {
     return (

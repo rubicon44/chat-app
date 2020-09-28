@@ -28,6 +28,7 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  // コンテキスト用のログアウト方法
   const signout = async () => {
     await auth.signOut()
   }

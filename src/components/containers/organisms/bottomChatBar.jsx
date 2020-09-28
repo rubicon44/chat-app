@@ -131,6 +131,13 @@ export default function BottomChatBar(props) {
     </MessageList>
   ));
 
+  // const messageList = (
+  //   <MessageList key={props.index}>
+  //       <dt></dt>
+  //       <dd key={props.index}>{props.chat.text}<br /></dd>
+  //   </MessageList>
+  // );
+
   const messageSendButtonDisplay = (
     props.message !== '' &&
     <span><SendIcon onClick={ e => props.messageSendMethod(e)} /></span>

@@ -20,7 +20,8 @@ const ButtonStyle = styled.button`
 
 function LogOutButton(props) {
   return (
-    <ButtonStyle onClick={() => auth.signout}>{props.text}</ButtonStyle>
+    // コンテキストを使わずにログアウト
+    <ButtonStyle onClick={() => auth.signOut()}>{props.text}</ButtonStyle>
   )
 }
 
