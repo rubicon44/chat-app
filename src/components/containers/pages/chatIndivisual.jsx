@@ -70,9 +70,9 @@ class ChatIndivisual extends Component {
   // 描画されてから処理を実行。
   componentDidUpdate() {
     // handleMessageSend()でセットされたtext（state内に一時的に保持）を即座にFirebase Realtime Databaseにpushする。
-    messagesRef.set({
-      "text" : this.state.text,
-    })
+    // messagesRef.push({
+    //   "text" : this.state.text,
+    // })
 
     const elementBottom = document.getElementById('messageListCover').clientHeight;
     window.scroll(0, elementBottom);
@@ -92,17 +92,20 @@ class ChatIndivisual extends Component {
   };
 
   // textメッセージにmessageの値を挿入し、messageの値を空に上書きしinputを空にする
-  handleMessageSend = (state) => {
-    const newData = update(this.state.text, {$push:[this.state.message]});
+  handleMessageSend = (e) => {
+    e.preventDefault();
+
+    const newData = update(this.state.text, {$push: [this.state.message]});
     this.setState({ 
         text: newData,
         message: '',
+    }, () => {
+      // このように「setStateのコールバック」を使用しないと、即座にstateにnewDataを反映させることができない。
+      // handleMessageSend()でセットされたtext（state内に一時的に保持）を即座にFirebase Realtime Databaseにpushする。
+      messagesRef.set({
+        "text" : this.state.text,
+      });
     });
-
-    // Firebase Realtime Databaseへデータを書き込み
-    // messagesRef.set({
-    //   "text" : this.state.text,
-    // })
 
     document.getElementById('messageListCover').style.paddingBottom =  "0";
   };
