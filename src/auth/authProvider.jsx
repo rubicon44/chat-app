@@ -12,7 +12,32 @@ export const AuthProvider = ({ children }) => {
     try {
       // awaitをつけないと、先に「history.push」が実行されてしまいログイン画面（/）にページ遷移してしまう。
       await auth.signInWithEmailAndPassword(email, password);
-      history.push("/");
+
+      // LINE id連携用（URLにreturnURLが含まれていた場合リダイレクト先を変更）
+      const urlCheck = window.location.search.substring(1);
+
+      // 含まれている場合は「0」、含まれていない場合は「-1」が格納される。
+      const urlCheckResult = urlCheck.includes(' ');
+      const linkToken = window.location.search.substring(1);
+
+      // ユーザー情報取得
+      const user = auth.currentUser;
+      const userId = user.uid;
+      // 下記emailを取得しようとすると「ReferenceError: Cannot access 'email' before initialization（ReferenceError:初期化の前に「電子メール 」にアクセスできません）」とエラーが出現
+      // const email = user.getEmail();
+      // console.log(email);
+      // console.log(userId);
+
+      console.log(urlCheckResult);
+
+      if(urlCheckResult === true) {
+        history.push("/");
+      } else {
+        history.push({
+          pathname: "/lineLinkEx?" + linkToken,
+          state: {userId}
+        });
+      }
     } catch (error) {
       alert(error);
     }
