@@ -3,6 +3,7 @@ import update from 'immutability-helper';
 import styled from 'styled-components';
 
 import { firebaseDb } from '../../../infra/firebase.js'
+import { auth } from '../../../infra/firebase.js';
 
 import Header from '../organisms/header';
 import BottomChatBar from '../organisms/bottomChatBar';
@@ -36,7 +37,7 @@ const Title = styled.h1`
 `
 
 // Firebase Realtime Databaseとの通信用
-const messagesRef = firebaseDb.ref('/chat');
+const messagesRef = firebaseDb.ref('/');
 
 class ChatIndivisual extends Component {
   constructor(props) {
@@ -44,22 +45,33 @@ class ChatIndivisual extends Component {
     this.state = {
       text: [],
       message: '',
+      userId: [],
+      // user: [],
     };
   }
 
   // Viewが一番最初に描画されるとき、Firebase Realtime Databaseに保持されているtext（チャット内容）をReactで表示させる
   componentDidMount() {
     // Firebase Realtime Databaseの内容が変更されたときの処理
-    messagesRef.on('child_added', (snapshot) => {
+
+    // todo:一度「child_added」でメッセージを送信した後、「value」で値を取得する
+    messagesRef.on('value', (snapshot) => {
+    // 「　messagesRef.on('child_added', (snapshot) => {　」と「child_added」だと、1つ目の「text」しか取得できなかった。
       // 現在のFirebase Realtime Databaseの内容を変数mに代入
-      const m = snapshot.val()
+      const m = snapshot.val();
+      // const texts = this.state.text;
+
+      // texts.push({
+      //   ''
+      // })
 
       // 現在のFirebase Realtime Databaseの内容で、stateを更新
       this.setState({
-        text : m
+        text : m.user.text,
+        userId: m.user.userId,
+        // user: m.user,
       });
-
-      // console.log(this.state.text);
+      // console.log(this.state.user);
     })
   };
 
@@ -74,8 +86,8 @@ class ChatIndivisual extends Component {
     //   "text" : this.state.text,
     // })
 
-    const elementBottom = document.getElementById('messageListCover').clientHeight;
-    window.scroll(0, elementBottom);
+    // const elementBottom = document.getElementById('messageListCover').clientHeight;
+    // window.scroll(0, elementBottom);
   }
 
   // input内のvalueに入力した値を反映させる
@@ -85,29 +97,48 @@ class ChatIndivisual extends Component {
         message: e.target.value,
     });
 
-    const bottomBarHeight = 50;
-    const textAreaHeight = document.getElementById('bottomBarVariableHeight').clientHeight;
-    const variableMessageListPaddingBottom = textAreaHeight - bottomBarHeight;
-    document.getElementById('messageListCover').style.paddingBottom = variableMessageListPaddingBottom + "px";
+    // const bottomBarHeight = 50;
+    // const textAreaHeight = document.getElementById('bottomBarVariableHeight').clientHeight;
+    // const variableMessageListPaddingBottom = textAreaHeight - bottomBarHeight;
+    // document.getElementById('messageListCover').style.paddingBottom = variableMessageListPaddingBottom + "px";
   };
 
   // textメッセージにmessageの値を挿入し、messageの値を空に上書きしinputを空にする
   handleMessageSend = (e) => {
     e.preventDefault();
 
+    // userId登録
+    const user = auth.currentUser;
+    const userId = user.uid;
+    const newUser = update(this.state.userId, {$push: [userId]});
+
+    // message登録
     const newData = update(this.state.text, {$push: [this.state.message]});
-    this.setState({ 
+    
+    this.setState({
         text: newData,
         message: '',
+        userId: newUser,
     }, () => {
       // このように「setStateのコールバック」を使用しないと、即座にstateにnewDataを反映させることができない。
       // handleMessageSend()でセットされたtext（state内に一時的に保持）を即座にFirebase Realtime Databaseにpushする。
       messagesRef.set({
-        "text" : this.state.text,
+        // "userId": this.state.userId,
+        "user": {
+          "userId": this.state.userId,
+          "text": this.state.text
+        }
       });
+
+      // 子要素に挿入
+      // var userIdRef = firebaseDb.ref("/userId");
+
+      // userIdRef.set({
+      //   "text" : this.state.text,
+      // });
     });
 
-    document.getElementById('messageListCover').style.paddingBottom =  "0";
+    // document.getElementById('messageListCover').style.paddingBottom = "0";
   };
 
   render() {
@@ -120,7 +151,10 @@ class ChatIndivisual extends Component {
           </BackButtonCover>
           <Title>props.friendname</Title>
                   {/* 下記で、text,message等のstateをpropsとして子コンポーネントに渡さなければ、input内を空にしたりできない。 */}
-          <BottomChatBar text={this.state.text} message={this.state.message} messageChangeMethod={this.handleMessageChange} messageSendMethod={this.handleMessageSend} />
+          {/* {this.state.text.map((text,message, i) => {
+            return <BottomChatBar key={i} text={text} message={message} messageChangeMethod={this.handleMessageChange} messageSendMethod={this.handleMessageSend} />
+          })} */}
+          <BottomChatBar userId={this.state.userId} text={this.state.text} message={this.state.message} messageChangeMethod={this.handleMessageChange} messageSendMethod={this.handleMessageSend} />
         </TopBackground>
       </div>
     )

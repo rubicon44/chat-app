@@ -27,6 +27,13 @@ const MessageList = styled.dl`
 `
 
 class Chat extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      room: [],
+    };
+  }
+
   handleMessageClick = () => {
     // :todo「/woman/[props.woman.name]というように値を渡さなければいけない。」
     this.props.history.push('/chatIndivisual');
@@ -39,16 +46,13 @@ class Chat extends Component {
         <TopBackground>
           <Title>チャット一覧</Title>
           <MessageList>
+            {/* ユーザーずつのチャットルームを作る */}
+            {/* map関数で、ユーザーごとのchatIndivisual.jsxを展開 */}
+            {/* 「ユーザー詳細画面」の「個別チャット」ボタンを押下し、メッセージを送る。（「ユーザー詳細画面」の「個別チャット」ボタンを押下したら、トークルームに移動する。DBにメッセージが追加されたことをトリガーとして、CloudFunctionsが動き、トークルームを作る。） */}
+            {/* メッセージが追加されたら、送信者・受信者のトークルームを作成 */}
+
               <dt></dt>
               <dd onClick={this.handleMessageClick}>
-                <img src="" alt="props（友達の名前）" />
-                <figcaption>props（友達の名前）</figcaption>
-              </dd>
-              <dd>
-                <img src="" alt="props（友達の名前）" />
-                <figcaption>props（友達の名前）</figcaption>
-              </dd>
-              <dd>
                 <img src="" alt="props（友達の名前）" />
                 <figcaption>props（友達の名前）</figcaption>
               </dd>
