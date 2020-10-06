@@ -37,7 +37,7 @@ const Title = styled.h1`
 `
 
 // Firebase Realtime Databaseとの通信用
-const messagesRef = firebaseDb.ref('/');
+const messagesRef = firebaseDb.ref('/chat_room');
 
 class ChatIndivisual extends Component {
   constructor(props) {
@@ -55,10 +55,15 @@ class ChatIndivisual extends Component {
     // Firebase Realtime Databaseの内容が変更されたときの処理
 
     // todo:一度「child_added」でメッセージを送信した後、「value」で値を取得する
-    messagesRef.on('value', (snapshot) => {
+    messagesRef.on('child_added', (snapshot) => {
     // 「　messagesRef.on('child_added', (snapshot) => {　」と「child_added」だと、1つ目の「text」しか取得できなかった。
       // 現在のFirebase Realtime Databaseの内容を変数mに代入
       const m = snapshot.val();
+      // console.log(m);
+      // const m1 = m.text.text
+      // ここで、一意のキーを取得できる。
+      // const key = snapshot.key;
+      // console.log(key);
       // const texts = this.state.text;
 
       // texts.push({
@@ -67,8 +72,8 @@ class ChatIndivisual extends Component {
 
       // 現在のFirebase Realtime Databaseの内容で、stateを更新
       this.setState({
-        text : m.user.text,
-        userId: m.user.userId,
+        text : m.text,
+        userId: m.userId,
         // user: m.user,
       });
       // console.log(this.state.user);
@@ -122,12 +127,10 @@ class ChatIndivisual extends Component {
     }, () => {
       // このように「setStateのコールバック」を使用しないと、即座にstateにnewDataを反映させることができない。
       // handleMessageSend()でセットされたtext（state内に一時的に保持）を即座にFirebase Realtime Databaseにpushする。
-      messagesRef.set({
+      messagesRef.push({
         // "userId": this.state.userId,
-        "user": {
-          "userId": this.state.userId,
-          "text": this.state.text
-        }
+        "userId": this.state.userId,
+        "text": this.state.text,
       });
 
       // 子要素に挿入

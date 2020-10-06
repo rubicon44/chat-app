@@ -17,6 +17,9 @@ import SignIn from './static_pages/sign_in';
 import SignUp from './static_pages/sign_up';
 import LineLink from './line/lineLink';
 import LineLinkEx from './line/lineLinkEx';
+// ユーザー詳細
+import UserList from './components/containers/pages/userList';
+import User from './components/containers/pages/user';
 // メッセージ
 import Chat from './components/containers/pages/chat';
 import ChatIndivisual from './components/containers/pages/chatIndivisual';
@@ -38,6 +41,8 @@ class App extends Component {
               {/* <Route exact path="/lineLink" component={LineLink}>
                 {<Redirect to="/sign_in" />}
               </Route> */}
+              <PrivateRoute exact path="/userList" component={UserList} />
+              <PrivateRoute exact path="/user" component={User} />
               {/* チャット */}
               <PrivateRoute exact path="/chat" component={Chat} />
               <PrivateRoute exact path="/chatIndivisual" component={ChatIndivisual} />

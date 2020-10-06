@@ -185,13 +185,13 @@ export default function BottomChatBar(props) {
   const legth = props.userId.length;
   console.log(legth);
 
-  const items = [];
+  const messageList = [];
 
   for (let i = 0; i < legth; i++){
     const userId = props.userId[i];
     const text = props.text[i];
 
-    items.push(
+    messageList.push(
       <div>
         {(user_id === userId ? (
           <div>
@@ -297,7 +297,7 @@ export default function BottomChatBar(props) {
       <CssBaseline />
 
      {/* メッセージリスト */}
-     <MessageListCover>{items}</MessageListCover>
+     <MessageListCover>{messageList}</MessageListCover>
      {/* <MessageListCover>{userId}</MessageListCover> */}
          {/* <MessageListCover id="messageListCover">{messageList}</MessageListCover> */}
 

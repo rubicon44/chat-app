@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 // import { Link, } from 'react-router-dom';
 import styled from 'styled-components';
 
+import { auth } from '../infra/firebase.js';
+
 import Header from '../components/containers/organisms/header';
 import NextSignInButton from '../components/presentational/atoms/nextSignInButton';
 import NextSignUpButton from '../components/presentational/atoms/nextSignUpButton';
@@ -37,6 +39,26 @@ const NextSignInUpButtonCover = styled.div`
 `
 
 class Top extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      uid: [],
+    };
+  }
+
+  componentDidMount() {
+    const user = auth.currentUser;
+    const user_id = user.uid;
+
+    this.setState({
+      uid: user_id,
+    });
+  }
+  // uidを表示させ、uidをクリックすると、User詳細画面へ遷移する
+  handleUidClick = () => {
+    this.props.history.push('/user');
+  }
+
   render() {
     return (
       <div>
@@ -45,6 +67,7 @@ class Top extends Component {
           <NextSignInButton text="ログイン" />
           <NextSignUpButton text="会員登録" />
           <LogOutButton text="ログアウト" />
+          <div onClick={this.handleUidClick}>{this.state.uid}</div>
         </NextSignInUpButtonCover>
         <TopBackground>
           <Title>Chap-app</Title>
