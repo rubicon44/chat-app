@@ -20,6 +20,11 @@ import LineLinkEx from './line/lineLinkEx';
 // ユーザー詳細
 import UserList from './components/containers/pages/userList';
 import User from './components/containers/pages/user';
+// ToDo管理
+import ToDo from './toDo/containers/pages/toDo';
+import Create from './toDo/containers/pages/create';
+import Show from './toDo/containers/pages/show';
+import Edit from './toDo/containers/pages/edit';
 // メッセージ
 import Chat from './components/containers/pages/chat';
 import ChatIndivisual from './components/containers/pages/chatIndivisual';
@@ -43,6 +48,11 @@ class App extends Component {
               </Route> */}
               <PrivateRoute exact path="/userList" component={UserList} />
               <PrivateRoute exact path="/user" component={User} />
+              {/* ToDo管理 */}
+              <PrivateRoute exact path="/toDo" component={ToDo} />
+              <PrivateRoute exact path="/create" component={Create} />
+              <PrivateRoute exact path="/show/:id" component={Show} />
+              <PrivateRoute exact path="/edit/:id" component={Edit} />
               {/* チャット */}
               <PrivateRoute exact path="/chat" component={Chat} />
               <PrivateRoute exact path="/chatIndivisual" component={ChatIndivisual} />

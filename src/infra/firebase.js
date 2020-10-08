@@ -32,8 +32,11 @@ firebase.initializeApp({
   messagingSenderId: process.env.REACT_APP_FIREBASE_SENDER_ID
 })
 
+// 認証用
 const auth = firebase.auth();
-// const db = firebase.firestore();
+// ToDo管理用
+const db = firebase.firestore();
+// チャット用
 const firebaseDb = firebase.database();
 
-export {auth, firebaseDb};
+export {auth, db, firebaseDb};

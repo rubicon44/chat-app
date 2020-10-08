@@ -10,6 +10,7 @@ import NextSignUpButton from '../components/presentational/atoms/nextSignUpButto
 import LogOutButton from '../components/presentational/atoms/logOutButton';
 
 import NextChatButton from '../components/presentational/atoms/nextChatButton';
+import NextToDoButton from '../components/presentational/atoms/nextToDoButton';
 
 const TopBackground = styled.div`
   display: flex;
@@ -35,6 +36,12 @@ const NextSignInUpButtonCover = styled.div`
   // todo:子要素にそのままmarginを当てたくないため、「親要素Coverの子要素のaタグ」へのスタイリング指定を行う。
   > a:first-of-type {
     margin-right: 10px;
+  }
+`
+
+const ButtonGroupCover = styled.div`
+  > a:not(:first-of-type) {
+    margin-top: 15px;
   }
 `
 
@@ -72,7 +79,10 @@ class Top extends Component {
         <TopBackground>
           <Title>Chap-app</Title>
           {/* 下記で「ゲストログイン」ができるようにする。 */}
-          <NextChatButton text="さっそく使ってみる" />
+          <ButtonGroupCover>
+            <NextChatButton text="チャットをする" />
+            <NextToDoButton text="ToDoを管理する" />
+          </ButtonGroupCover>
         </TopBackground>
       </div>
     )

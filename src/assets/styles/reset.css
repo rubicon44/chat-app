@@ -52,3 +52,7 @@ a {
     color: inherit;
     text-decoration: none;
 }
+/* input, textareaの横幅を適正にする */
+input, textarea {
+  box-sizing: border-box;
+}

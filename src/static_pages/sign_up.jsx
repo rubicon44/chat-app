@@ -122,6 +122,8 @@ import React, { useContext } from 'react';
 import { withRouter } from 'react-router';
 import { AuthContext } from '../auth/authProvider';
 
+import Header from '../components/containers/organisms/header';
+
 const SignUp = ({ history }) => {
   const { signup } = useContext(AuthContext);
   const handleSubmit = event => {
@@ -132,6 +134,7 @@ const SignUp = ({ history }) => {
 
   return (
     <div>
+      <Header />
       <h1>Sign up</h1>
       <form onSubmit={handleSubmit}>
         <label>
