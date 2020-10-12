@@ -26,7 +26,7 @@ const MessageList = styled.dl`
 
   > dd {
     display: inline-block;
-    max-width: 225px;
+    max-width: 250px;
     padding: 5px;
     font-size: 14px;
     text-align: left;
@@ -47,7 +47,7 @@ const MessageListRight = styled.dl`
 
   > dd {
     display: inline-block;
-    max-width: 225px;
+    max-width: 250px;
     padding: 5px;
     font-size: 14px;
     text-align: left;
@@ -71,7 +71,7 @@ const MessageBottomBarIconCover = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  width: 40px;
+  width: 30px;
   height: 100%;
   padding: 13px;
   color: #ff444f;
@@ -155,38 +155,18 @@ const useStyles = makeStyles((theme) => ({
 export default function BottomChatBar(props) {
   const classes = useStyles();
 
-  // const messageList = props.text.map((text, index) => (
-  //   <MessageList key={index} id="messageList">
-  //     <dt></dt>
-  //     <dd key={index}>{text}<br /></dd>
-  //   </MessageList>
-  // ));
-
+  // ログインしているユーザーのメッセージを→寄せにするため
   const user = auth.currentUser;
   const user_id = user.uid;
 
-  // const userId = props.user.map((user, index) => (
-  //     <div key={index}>
-  //       {(user_id === user.userId ? (
-  //         <div key={index}>
-  //           <UserIdRight key={index}>{user.userId}</UserIdRight>
-  //           <MessageListRight key={index}>{user.text}</MessageListRight>
-  //         </div>
-  //       ) : (
-  //         <div key={index}>
-  //           <UserIdLeft key={index}>{user.userId}</UserIdLeft>
-  //           <MessageList key={index}>{user.text}</MessageList>
-  //         </div>
-  //       )
-  //       )}
-  //     </div>
-  //   ));
+  const t = props.text;
+  const u = props.userId;
 
-  const legth = props.userId.length;
-  console.log(legth);
+  // 配列数（メッセージ数）取得
+  const legth = props.text.length;
 
+  // ループ処理のため配列外だし
   const messageList = [];
-
   for (let i = 0; i < legth; i++){
     const userId = props.userId[i];
     const text = props.text[i];
@@ -214,79 +194,6 @@ export default function BottomChatBar(props) {
     );
   }
 
-  // const userId = props.userId.map((userId, index) => (
-  //   <div key={index}>
-  //     {(user_id === userId ? (
-  //       <div key={index}>
-  //         <UserIdRight key={index}>{userId}</UserIdRight>
-
-  //         {/* <span key={index}>
-  //           {
-  //             props.text.map((text, index) => (
-  //             <div key={index}>
-  //               {(user_id === userId ? (
-  //                 <MessageListRight key={index} id="messageList">
-  //                   <dt></dt>
-  //                   <dd key={index}>{text}<br /></dd>
-  //                 </MessageListRight>
-  //               ) : (
-  //                 <MessageList key={index} id="messageList">
-  //                   <dt></dt>
-  //                   <dd key={index}>{text}<br /></dd>
-  //                 </MessageList>
-  //               )
-  //               )}
-  //             </div>
-  //           ))}
-  //         </span> */}
-  //       </div>
-  //     ) : (
-  //       <div key={index}>
-  //         <UserIdLeft key={index}>{userId}</UserIdLeft>
-        
-  //         {/* <span key={index}>
-  //           {
-  //             props.text.map((text, index) => (
-  //             <div key={index}>
-  //               {(user_id === userId ? (
-  //                 <MessageListRight key={index} id="messageList">
-  //                   <dt></dt>
-  //                   <dd key={index}>{text}<br /></dd>
-  //                 </MessageListRight>
-  //               ) : (
-  //                 <MessageList key={index} id="messageList">
-  //                   <dt></dt>
-  //                   <dd key={index}>{text}<br /></dd>
-  //                 </MessageList>
-  //               )
-  //               )}
-  //             </div>
-  //           ))}
-  //         </span> */}
-  //       </div>
-  //     )
-  //     )}
-  //   </div>
-  // ));
-
-  // const user = auth.currentUser;
-  // const user_id = user.uid;
-  
-  // if(user_id === props.userId) {
-  //   // スタイル変更
-  //   document.getElementById('messageList').style.textAlign = "right";
-  // }
-
-  // console.log(user_id);
-  // console.log(userId);
-
-  // const messageList = (
-  //   <MessageList key={props.index}>
-  //       <dt></dt>
-  //       <dd key={props.index}>{props.chat.text}<br /></dd>
-  //   </MessageList>
-  // );
-
   const messageSendButtonDisplay = (
     props.message !== '' &&
     <span><SendIcon onClick={ e => props.messageSendMethod(e)} /></span>
@@ -298,19 +205,6 @@ export default function BottomChatBar(props) {
 
      {/* メッセージリスト */}
      <MessageListCover>{messageList}</MessageListCover>
-     {/* <MessageListCover>{userId}</MessageListCover> */}
-         {/* <MessageListCover id="messageListCover">{messageList}</MessageListCover> */}
-
-    {/* <MessageListCover id="messageListCover">
-      {
-        props.text.map((m, i) => (
-          <MessageList key={i} id="messageList">
-            <dt></dt>
-            <dd key={i}>{m.userId}<br /></dd>
-          </MessageList>
-        ))
-      }
-    </MessageListCover> */}
 
      {/* bottomBar */}
      <AppBar position="fixed" color="primary" id="bottomBarVariableHeight" className={classes.appBar}>

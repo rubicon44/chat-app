@@ -36,8 +36,11 @@ const Title = styled.h1`
   font-family: YuGothic;
 `
 
-// Firebase Realtime Databaseとの通信用
-const messagesRef = firebaseDb.ref('/chat_room');
+const chatroomsRef = firebaseDb.ref('/chat_room');
+// 新しいチャットルームIDの作成
+const newChatroomsRef = chatroomsRef.push();
+const chatroomId = newChatroomsRef.key;
+const messagesRef = firebaseDb.ref(`/chat_room/${chatroomId}`);
 
 class ChatIndivisual extends Component {
   constructor(props) {
@@ -46,37 +49,32 @@ class ChatIndivisual extends Component {
       text: [],
       message: '',
       userId: [],
-      // user: [],
+      chatroomId: '',
+      chatroomIdList: [],
     };
   }
 
-  // Viewが一番最初に描画されるとき、Firebase Realtime Databaseに保持されているtext（チャット内容）をReactで表示させる
   componentDidMount() {
-    // Firebase Realtime Databaseの内容が変更されたときの処理
+    // URLから末尾の「チャットルームID」取得 & Ref作成（データ取得の準備）
+    const url = window.location.href.split("/");
+    const lastUrl = url[url.length -1];
+    const currentChatRoomRef = firebaseDb.ref(`/chat_room/${lastUrl}`);
 
-    // todo:一度「child_added」でメッセージを送信した後、「value」で値を取得する
-    messagesRef.on('child_added', (snapshot) => {
-    // 「　messagesRef.on('child_added', (snapshot) => {　」と「child_added」だと、1つ目の「text」しか取得できなかった。
-      // 現在のFirebase Realtime Databaseの内容を変数mに代入
+    currentChatRoomRef.on('value', (snapshot) => {
       const m = snapshot.val();
-      // console.log(m);
-      // const m1 = m.text.text
-      // ここで、一意のキーを取得できる。
-      // const key = snapshot.key;
-      // console.log(key);
-      // const texts = this.state.text;
 
-      // texts.push({
-      //   ''
-      // })
-
-      // 現在のFirebase Realtime Databaseの内容で、stateを更新
-      this.setState({
-        text : m.text,
-        userId: m.userId,
-        // user: m.user,
-      });
-      // console.log(this.state.user);
+      if (m !== null | undefined) {
+        this.setState({
+          text : m.text,
+          userId: m.userId,
+          chatroomId: lastUrl,
+        });
+      } else {
+        // nullだった場合、新しい「chatroomId」でチャットルームを作成
+        this.setState({
+          chatroomId: lastUrl,
+        });
+      }
     })
   };
 
@@ -84,31 +82,13 @@ class ChatIndivisual extends Component {
     this.props.history.goBack('/chat');
   };
 
-  // 描画されてから処理を実行。
-  componentDidUpdate() {
-    // handleMessageSend()でセットされたtext（state内に一時的に保持）を即座にFirebase Realtime Databaseにpushする。
-    // messagesRef.push({
-    //   "text" : this.state.text,
-    // })
-
-    // const elementBottom = document.getElementById('messageListCover').clientHeight;
-    // window.scroll(0, elementBottom);
-  }
-
-  // input内のvalueに入力した値を反映させる
   handleMessageChange = (e) => {
     e.preventDefault();
     this.setState({ 
         message: e.target.value,
     });
-
-    // const bottomBarHeight = 50;
-    // const textAreaHeight = document.getElementById('bottomBarVariableHeight').clientHeight;
-    // const variableMessageListPaddingBottom = textAreaHeight - bottomBarHeight;
-    // document.getElementById('messageListCover').style.paddingBottom = variableMessageListPaddingBottom + "px";
   };
 
-  // textメッセージにmessageの値を挿入し、messageの値を空に上書きしinputを空にする
   handleMessageSend = (e) => {
     e.preventDefault();
 
@@ -125,23 +105,28 @@ class ChatIndivisual extends Component {
         message: '',
         userId: newUser,
     }, () => {
-      // このように「setStateのコールバック」を使用しないと、即座にstateにnewDataを反映させることができない。
-      // handleMessageSend()でセットされたtext（state内に一時的に保持）を即座にFirebase Realtime Databaseにpushする。
-      messagesRef.push({
-        // "userId": this.state.userId,
-        "userId": this.state.userId,
+      // 既存チャットルームの有無を判別
+      chatroomsRef.on('value', (snapshot) => {
+        const newData = [];
+        snapshot.forEach((childSnapshot) => {
+          const key = childSnapshot.key;
+          newData.push(key);
+  
+          if (snapshot !== null | undefined) {
+            this.setState({
+              chatroomIdList: newData,
+            });
+          }
+        })
+      })
+
+      // 既存チャットルーム更新 & 新しいキーで新しいチャットルーム作成
+      const currentChatRoomRef = firebaseDb.ref(`/chat_room/${this.state.chatroomId}`);
+      currentChatRoomRef.update({
         "text": this.state.text,
+        "userId": this.state.userId,
       });
-
-      // 子要素に挿入
-      // var userIdRef = firebaseDb.ref("/userId");
-
-      // userIdRef.set({
-      //   "text" : this.state.text,
-      // });
     });
-
-    // document.getElementById('messageListCover').style.paddingBottom = "0";
   };
 
   render() {
@@ -153,10 +138,6 @@ class ChatIndivisual extends Component {
             <ArrowBackIosIcon onClick={this.handleBackButtonClick} />
           </BackButtonCover>
           <Title>props.friendname</Title>
-                  {/* 下記で、text,message等のstateをpropsとして子コンポーネントに渡さなければ、input内を空にしたりできない。 */}
-          {/* {this.state.text.map((text,message, i) => {
-            return <BottomChatBar key={i} text={text} message={message} messageChangeMethod={this.handleMessageChange} messageSendMethod={this.handleMessageSend} />
-          })} */}
           <BottomChatBar userId={this.state.userId} text={this.state.text} message={this.state.message} messageChangeMethod={this.handleMessageChange} messageSendMethod={this.handleMessageSend} />
         </TopBackground>
       </div>

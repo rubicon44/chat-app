@@ -55,7 +55,7 @@ class App extends Component {
               <PrivateRoute exact path="/edit/:id" component={Edit} />
               {/* チャット */}
               <PrivateRoute exact path="/chat" component={Chat} />
-              <PrivateRoute exact path="/chatIndivisual" component={ChatIndivisual} />
+              <PrivateRoute exact path="/chatIndivisual/:id" component={ChatIndivisual} />
             {/* </Switch> */}
           </div>
         </Router>

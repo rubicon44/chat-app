@@ -3,6 +3,8 @@ import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 import { auth } from '../../../infra/firebase.js';
 
+import { firebaseDb } from '../../../infra/firebase.js';
+
 import Header from '../organisms/header';
 import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
 
@@ -45,21 +47,40 @@ const Title = styled.h1`
   font-family: YuGothic;
 `
 
+const chatroomsRef = firebaseDb.ref('/chat_room');
+const newChatroomsRef = chatroomsRef.push();
+const chatroomId = newChatroomsRef.key;
+const messagesRef = firebaseDb.ref(`/chat_room/${chatroomId}`);
+
 class User extends Component {
   constructor(props) {
     super(props);
     this.state = {
       email: [],
+      uid: [],
+      chatroomId: [],
     };
   }
 
   componentDidMount() {
-    const user = auth.currentUser;
-    const email = user.email;
+    // ユーザー情報取得
+    const uid = auth.currentUser;
+    const email = uid.email;
 
     this.setState({
       email: email,
+      uid: uid,
     });
+
+    // データ取得
+    messagesRef.on('value', (snapshot) => {
+      const key = snapshot.key;
+      if (key !== null) {
+        this.setState({
+          chatroomId: key,
+        });
+      }
+    })
   }
 
   handleBackButtonClick = () => {
@@ -75,8 +96,7 @@ class User extends Component {
         </BackButtonCover>
         <TopBackground>
           <div>
-              {/* todo:「チャット」部分をMaterial-uiのメッセージ画像に差し替える */}
-            <NextChatIndivisualButton to="/chatIndivisual">チャット</NextChatIndivisualButton>
+            <NextChatIndivisualButton to={`/chatIndivisual/${this.state.chatroomId}`}>チャット</NextChatIndivisualButton>
           </div>
           <Title>ユーザー詳細</Title>
             <div>{this.state.email}</div>
